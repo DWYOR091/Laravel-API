@@ -31,10 +31,10 @@ class User extends Authenticatable
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function post(): HasMany
-    {
-        return $this->hasMany(Post::class, 'author', 'id');
-    }
+    // public function post(): HasMany
+    // {
+    //     return $this->hasMany(Post::class, 'author', 'id');
+    // }
 
     /**
      * The attributes that should be hidden for serialization.

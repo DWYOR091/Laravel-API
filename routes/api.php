@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthenticationController;
+use App\Http\Controllers\CommentController;
 use App\Http\Controllers\PostController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -20,9 +21,18 @@ use Illuminate\Support\Facades\Route;
 //     return $request->user();
 // });
 
-Route::get('/post', [PostController::class, 'index'])->middleware(['auth:sanctum']);
-Route::get('/post/{id}', [PostController::class, 'show'])->middleware(['auth:sanctum']);
+Route::middleware(['auth:sanctum'])->group(function () {
+    Route::post('/logout', [AuthenticationController::class, 'logout']);
+    Route::get('/me', [AuthenticationController::class, 'me']);
+    Route::post('/post', [PostController::class, 'store']);
+    Route::put('/update/{id}', [PostController::class, 'update'])->middleware('pemilikPostingan');
+    Route::delete('/delete/{id}', [PostController::class, 'delete'])->middleware('pemilikPostingan');
+
+    Route::post('/comment', [CommentController::class, 'store']);
+    Route::patch('/update/{id}', [CommentController::class, 'update'])->middleware('pemilikComment');
+    Route::delete('/delete/{id}', [CommentController::class, 'delete'])->middleware('pemilikComment');
+});
+Route::get('/post', [PostController::class, 'index']);
+Route::get('/post/{id}', [PostController::class, 'show']);
 
 Route::post('/login', [AuthenticationController::class, 'login']);
-Route::post('/logout', [AuthenticationController::class, 'logout'])->middleware(['auth:sanctum']);
-Route::get('/me', [AuthenticationController::class, 'me'])->middleware(['auth:sanctum']);

@@ -29,6 +29,11 @@ class AuthenticationController extends Controller
 
     public function logout(Request $req)
     {
+        //logging out
+        // Auth::logout();
+        // $req->session()->invalidate();
+        // $req->session()->regenerateToken();
+        //reveoke token
         $req->user()->currentAccessToken()->delete();
         return 'berhasil';
     }

@@ -20,10 +20,19 @@ class PostResource extends JsonResource
             'id' => $this->id,
             'title' => $this->title,
             'news_content' => $this->news_content,
-            'created_at' => date('Y-m-d', $this->created_at),
+            'created_at' => date('Y-m-d', strtotime($this->created_at)),
             //eager loading untuk memastikan bahwa Anda hanya mengakses relasi yang dimuat, sehingga
             //Anda dapat menghindari kesalahan saat mencoba mengakses relasi yang belum dimuat.
-            'writer' => $this->whenLoaded('writer')
+            'writer' => $this->whenLoaded('writer'),
+            'comments' => $this->whenLoaded('comments', function () {
+                return collect($this->comments)->each(function ($comment) {
+                    $comment->commentator;
+                    return $comment;
+                });
+            }),
+            'total_comment' => $this->whenLoaded('comments', function () {
+                return $this->comments->count();
+            }),
             // 'created_at' => Carbon::parse($this->created_at)->format('Y-m-d'),
         ];
     }
